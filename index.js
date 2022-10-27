@@ -4,6 +4,9 @@ var currentRow = 1;
 var guess = '';
 var gamesPlayed = [];
 let words;
+let totalGames = 0;
+let winPercentage = 0;
+let avgAttempts = 0;
 
 // Query Selectors
 var inputs = document.querySelectorAll('input');
@@ -17,6 +20,9 @@ var gameBoard = document.querySelector('#game-section');
 var letterKey = document.querySelector('#key-section');
 var rules = document.querySelector('#rules-section');
 var stats = document.querySelector('#stats-section');
+var statsTotalGames = document.querySelector('#stats-total-games');
+var statsWinPercentage = document.querySelector('#stats-percent-correct');
+var statsAvgAttempts = document.querySelector('#stats-average-guesses');
 var gameOverBox = document.querySelector('#game-over-section');
 var gameOverMessage = document.querySelector('#game-over-message');
 var gameOverInformation = document.querySelector('#informational-text')
@@ -115,9 +121,6 @@ function submitGuess() {
       changeRow();
     } else {
       declareLoser();
-      // updateGameOverBox();
-      // viewGameOverMessage();
-      // setTimeout(startNewGame, 4000);
     }
   } else {
     errorMessage.innerText = 'Not a valid word. Try again!';
@@ -209,6 +212,7 @@ function recordGameStats(result) {
   } else {
   gamesPlayed.push({ solved: true, guesses: currentRow });
   }
+  updateStatistics();
 }
 
 function changeGameOverText() {
@@ -250,6 +254,34 @@ function updateGameOverMessage(result) {
     gameOverMessage.innerText = 'Yay!';
   }
 }
+
+function updateWinPercentage() {
+  let unformattedWinPercentage = gamesPlayed.filter(game => game.solved).length / totalGames;
+  winPercentage = (unformattedWinPercentage * 100).toFixed(2) + '%';
+}
+
+function updateAvgAttempts() {
+  totalAttempts = gamesPlayed.reduce((acc, game) => {
+    acc += game.guesses;
+    return acc;
+  }, 0);
+  avgAttempts = (totalAttempts / totalGames).toFixed(1);
+}
+
+function updateStatistics() {
+  totalGames = gamesPlayed.length;
+  updateWinPercentage();
+  updateAvgAttempts();
+  updateStatisticsView();
+}
+
+function updateStatisticsView() {
+  statsTotalGames.innerText = totalGames;
+  statsWinPercentage.innerText = winPercentage;
+  statsAvgAttempts.innerText = avgAttempts;
+}
+
+
 
 // Change Page View Functions
 
