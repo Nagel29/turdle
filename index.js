@@ -3,6 +3,7 @@ var winningWord = '';
 var currentRow = 1;
 var guess = '';
 var gamesPlayed = [];
+let words;
 
 // Query Selectors
 var inputs = document.querySelectorAll('input');
@@ -21,7 +22,7 @@ var gameOverGuessCount = document.querySelector('#game-over-guesses-count');
 var gameOverGuessGrammar = document.querySelector('#game-over-guesses-plural');
 
 // Event Listeners
-window.addEventListener('load', setGame);
+window.addEventListener('load', promises);
 
 for (var i = 0; i < inputs.length; i++) {
   inputs[i].addEventListener('keyup', function() { moveToNextInput(event) });
@@ -39,16 +40,31 @@ viewGameButton.addEventListener('click', viewGame);
 
 viewStatsButton.addEventListener('click', viewStats);
 
+// Data fetch functions
+let fetchWords = () => {
+  return fetch(`http://localhost:3001/api/v1/words`)
+      .then(response => response.json())
+      .catch(error => console.log(error));
+}
+
+// Promises
+function promises() {
+  Promise.all([fetchWords()]).then(data => {
+    words = data[0];
+    setGame(words)
+  })
+}
+
 // Functions
-function setGame() {
+function setGame(wordsData) {
   currentRow = 1;
-  winningWord = getRandomWord();
+  winningWord = getRandomWord(wordsData);
   updateInputPermissions();
 }
 
-function getRandomWord() {
+function getRandomWord(wordsData) {
   var randomIndex = Math.floor(Math.random() * 2500);
-  return words[randomIndex];
+  return wordsData[randomIndex];
 }
 
 function updateInputPermissions() {
