@@ -18,6 +18,8 @@ var letterKey = document.querySelector('#key-section');
 var rules = document.querySelector('#rules-section');
 var stats = document.querySelector('#stats-section');
 var gameOverBox = document.querySelector('#game-over-section');
+var gameOverMessage = document.querySelector('#game-over-message');
+var gameOverInformation = document.querySelector('#informational-text')
 var gameOverGuessCount = document.querySelector('#game-over-guesses-count');
 var gameOverGuessGrammar = document.querySelector('#game-over-guesses-plural');
 
@@ -112,9 +114,10 @@ function submitGuess() {
     } else if (currentRow !== 6) {
       changeRow();
     } else {
-      updateGameOverBox();
-      viewGameOverMessage();
-      setTimeout(startNewGame, 4000);
+      declareLoser();
+      // updateGameOverBox();
+      // viewGameOverMessage();
+      // setTimeout(startNewGame, 4000);
     }
   } else {
     errorMessage.innerText = 'Not a valid word. Try again!';
@@ -186,14 +189,26 @@ function changeRow() {
 }
 
 function declareWinner() {
-  recordGameStats();
+  recordGameStats('win');
+  updateGameOverMessage('win');
   changeGameOverText();
   viewGameOverMessage();
-  setTimeout(startNewGame(), 4000);
+  setTimeout(startNewGame, 4000);
 }
 
-function recordGameStats() {
+function declareLoser() {
+  recordGameStats('loss');
+  updateGameOverMessage('loss');
+  viewGameOverMessage();
+  setTimeout(startNewGame, 4000);
+}
+
+function recordGameStats(result) {
+  if (result === 'loss') {
+    gamesPlayed.push({ solved: false, guesses: 6 })
+  } else {
   gamesPlayed.push({ solved: true, guesses: currentRow });
+  }
 }
 
 function changeGameOverText() {
@@ -226,8 +241,14 @@ function clearKey() {
   }
 }
 
-function updateGameOverBox() {
-  gameOverBox.innerHTML = `<h4 id="game-over-message">Sorry, you lost!</h4>`;
+function updateGameOverMessage(result) {
+  if (result === 'loss') {
+  gameOverInformation.classList.add('hidden');
+  gameOverMessage.innerText = 'Sorry, you lost!';
+  } else {
+    gameOverInformation.classList.remove('hidden');
+    gameOverMessage.innerText = 'Yay!';
+  }
 }
 
 // Change Page View Functions
