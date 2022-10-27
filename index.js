@@ -20,6 +20,9 @@ var gameBoard = document.querySelector('#game-section');
 var letterKey = document.querySelector('#key-section');
 var rules = document.querySelector('#rules-section');
 var stats = document.querySelector('#stats-section');
+var statsTotalGames = document.querySelector('#stats-total-games');
+var statsWinPercentage = document.querySelector('#stats-percent-correct');
+var statsAvgAttempts = document.querySelector('#stats-average-guesses');
 var gameOverBox = document.querySelector('#game-over-section');
 var gameOverMessage = document.querySelector('#game-over-message');
 var gameOverInformation = document.querySelector('#informational-text')
@@ -262,14 +265,23 @@ function updateAvgAttempts() {
     acc += game.guesses;
     return acc;
   }, 0);
-  avgAttempts = (totalAttempts / totalGames).toFixed(2);
+  avgAttempts = (totalAttempts / totalGames).toFixed(1);
 }
 
 function updateStatistics() {
   totalGames = gamesPlayed.length;
   updateWinPercentage();
   updateAvgAttempts();
+  updateStatisticsView();
 }
+
+function updateStatisticsView() {
+  statsTotalGames.innerText = totalGames;
+  statsWinPercentage.innerText = winPercentage;
+  statsAvgAttempts.innerText = avgAttempts;
+}
+
+
 
 // Change Page View Functions
 
