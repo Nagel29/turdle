@@ -4,6 +4,9 @@ var currentRow = 1;
 var guess = '';
 var gamesPlayed = [];
 let words;
+let totalGames = 0;
+let winPercentage = 0;
+let avgAttempts = 0;
 
 // Query Selectors
 var inputs = document.querySelectorAll('input');
@@ -115,9 +118,6 @@ function submitGuess() {
       changeRow();
     } else {
       declareLoser();
-      // updateGameOverBox();
-      // viewGameOverMessage();
-      // setTimeout(startNewGame, 4000);
     }
   } else {
     errorMessage.innerText = 'Not a valid word. Try again!';
@@ -209,6 +209,7 @@ function recordGameStats(result) {
   } else {
   gamesPlayed.push({ solved: true, guesses: currentRow });
   }
+  updateStatistics();
 }
 
 function changeGameOverText() {
@@ -249,6 +250,25 @@ function updateGameOverMessage(result) {
     gameOverInformation.classList.remove('hidden');
     gameOverMessage.innerText = 'Yay!';
   }
+}
+
+function updateWinPercentage() {
+  let unformattedWinPercentage = gamesPlayed.filter(game => game.solved).length / totalGames;
+  winPercentage = (unformattedWinPercentage * 100).toFixed(2) + '%';
+}
+
+function updateAvgAttempts() {
+  totalAttempts = gamesPlayed.reduce((acc, game) => {
+    acc += game.guesses;
+    return acc;
+  }, 0);
+  avgAttempts = (totalAttempts / totalGames).toFixed(2);
+}
+
+function updateStatistics() {
+  totalGames = gamesPlayed.length;
+  updateWinPercentage();
+  updateAvgAttempts();
 }
 
 // Change Page View Functions
