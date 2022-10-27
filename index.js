@@ -112,7 +112,9 @@ function submitGuess() {
     } else if (currentRow !== 6) {
       changeRow();
     } else {
-      errorMessage.innerText ='You Lost!'
+      updateGameOverBox();
+      viewGameOverMessage();
+      setTimeout(startNewGame, 4000);
     }
   } else {
     errorMessage.innerText = 'Not a valid word. Try again!';
@@ -187,7 +189,7 @@ function declareWinner() {
   recordGameStats();
   changeGameOverText();
   viewGameOverMessage();
-  setTimeout(startNewGame, 4000);
+  setTimeout(startNewGame(), 4000);
 }
 
 function recordGameStats() {
@@ -206,7 +208,7 @@ function changeGameOverText() {
 function startNewGame() {
   clearGameBoard();
   clearKey();
-  setGame();
+  setGame(words);
   viewGame();
   inputs[0].focus();
 }
@@ -222,6 +224,10 @@ function clearKey() {
   for (var i = 0; i < keyLetters.length; i++) {
     keyLetters[i].classList.remove('correct-location-key', 'wrong-location-key', 'wrong-key');
   }
+}
+
+function updateGameOverBox() {
+  gameOverBox.innerHTML = `<h4 id="game-over-message">Sorry, you lost!</h4>`;
 }
 
 // Change Page View Functions
